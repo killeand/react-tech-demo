@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>React Tech Demo</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.15/dist/tailwind.min.css" />
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                line-height: 1.2rem;
+            }
+            p {
+                margin-bottom: 1rem;
+            }
+        </style>
+
+        <script crossorigin src="https://unpkg.com/@babel/standalone@7.15.7/babel.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-router-dom@5.3.0/umd/react-router-dom.min.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds@1.4.12/src-min-noconflict/ace.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds@1.4.12/src-min-noconflict/mode-html.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds@1.4.12/src-min-noconflict/theme-monokai.js"></script>
+        <script crossorigin src="https://unpkg.com/react-ace@9.4.3/dist/react-ace.min.js/main.js"></script>
+        <script type="text/babel" data-presets="react">
+            const { Component } = React;
+            const { HashRouter, Switch, Route, Link } = ReactRouterDOM;
+
+            /*###################################################*\
+            APPLICATION START w/ Router
+            \*###################################################*/
+
+            class Application extends Component {
+                render() {
+                    return (
+                        <HashRouter>
+                            <header className="flex items-center text-white bg-blue-800 p-2">
+                                <div className="flex font-bold mr-2 px-1 border border-white rounded-full">
+                                    <span className="text-xl bi-cpu-fill"> React Tech Demo</span>
+                                </div>
+                                <nav className="flex flex-grow space-x-2">
+                                    <LinkButton to="/">Home</LinkButton>
+                                    <LinkButton to="/docs">Docs</LinkButton>
+                                    <LinkButton to="/react">React</LinkButton>
+                                    <LinkButton to="/router">Router</LinkButton>
+                                </nav>
+                            </header>
+                            <main className="flex-grow p-2">
+                                <Switch>
+                                    <Route exact path="/" component={Home} />
+                                    <Route exact path="/docs" component={Home} />
+                                    <Route exact path="/react" component={Home} />
+                                    <Route exact path="/router" component={Home} />
+                                </Switch>
+                            </main>
+                            <footer className="flex text-white bg-blue-800 p-2">
+                                <div className="flex-grow">Last Update: Never</div>
+                                <div>Source: Here</div>
+                            </footer>
+                        </HashRouter>
+                    );
+                }
+            }
+
+            /*###################################################*\
+            PAGES
+            \*###################################################*/
+
+            class Home extends Component {
+                render() {
+                    return (
+                        <>
+                            <h1 className="text-2xl leading-5 border-b border-black">Hello World!</h1>
+                            <p>Or should I say Foo Bar? Lorem ipsum? Whatever your preference or need, welcome to the React Tech Demo!</p>
+                            <p>This demo is set up to show you the power of React as a front end website engine. It's 'Front End' because it is run entirely on the users browser. It's a 'Website Engine' because it can handle a lot of the tedium you experienced trying to play with the JavaScript, event handling, and the Document Object Model (DOM).</p>
+                            <p>In this tech demo, we are going to break down React and it's neighbouring technology React Router. The breakdowns will try to touch on every subject that we can of the technology and put it to use (so long as it relates to Front End development). With each piece the technology will be put into practice so that you can look into the source and see it working exactly how it is explained. Which is a fancy way of saying that if a concept is explained, it was programmed into this file for you to scrutinize and dissect.</p>
+                            <p>This demo file also contains a template that you can copy and paste into your own html file so that you can practice each concept as you like.</p>
+                        </>
+                    );
+                }
+            }
+
+            /*###################################################*\
+            DEMO COMPONENTS
+            \*###################################################*/
+            class LinkButton extends Component {
+                render() {
+                    let styles = this.props.className;
+
+                    return (
+                        <Link className={styles + " border border-white rounded-md px-2 font-bold no-underline hover:bg-white hover:text-black"} {...this.props} />
+                    );
+                }
+            }
+
+            class Button extends Component {
+                GetStyle() {
+                    if (this.props.enabled === false)
+                        return " border-gray-200 bg-white text-black cursor-default";
+
+                    switch (this.props.color) {
+                        case 'blue': return " border-white bg-blue-600 text-white hover:border-blue-600 hover:bg-white hover:text-blue-600";
+                        case 'green': return " border-white bg-green-600 text-white hover:border-green-600 hover:bg-white hover:text-green-600";
+                        case 'red': return " border-white bg-red-600 text-white hover:border-red-600 hover:bg-white hover:text-red-600";
+                        default: return " border-black bg-white text-black hover:border-white hover:bg-black hover:text-white";
+                    }
+                }
+
+                RunClick(e) {
+                    
+                    if (this.props.enabled == true) {
+                        this.props.onClick(e);
+                    }
+                    else if (this.props.enabled === undefined) {
+                        this.props.onClick(e);
+                    }
+                }
+
+                render() {
+                    let styles = this.props.className;
+
+                    return (
+                        <button className={styles + this.GetStyle() + " border px-2 py-1 rounded-md"} onClick={this.RunClick.bind(this)}>{this.props.children}</button>
+                    );
+                }
+            }
+
+            class Alert extends Component {
+                state = {
+                    Show: true
+                }
+
+                Close() {
+                    this.setState({Show:false});
+                }
+
+                render() {
+                    return(
+                        <div className={"bg-red-600 text-white my-2 mx-4 rounded-md" + ((this.state.Show)?"":" hidden")}>
+                            <div className="flex items-center border-b">
+                                <div className="flex-grow font-bold px-2 py-1 uppercase">{this.props.title}</div>
+                                <button className="mx-2 my-1 px-1 font-bold border border-white rounded-md hover:bg-white hover:text-red-600 bi-x-square-fill" onClick={this.Close.bind(this)} />
+                            </div>
+                            <div className="p-1">{this.props.children}</div>
+                        </div>
+                    );
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="render-target" class="flex flex-col h-full"></div>
+        <script type="text/babel">
+            ReactDOM.render(<Application />, document.getElementById("render-target"));
+        </script>
+    </body>
+</html>
